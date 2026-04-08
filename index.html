@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>五脏健康自测题</title>
+<style>
+  :root {
+    --primary: #8B1A1A;
+    --primary-light: #C0392B;
+    --bg: #FAF6F0;
+    --card-bg: #FFFDF9;
+    --text: #2C1810;
+    --text-light: #6B4C3B;
+    --border: #E8D5C0;
+    --tag-bg: #FFF3CD;
+    --tag-border: #E6AC00;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(145deg, #6B1A1A 0%, #8B2828 40%, #A0522D 100%);
+    padding: 36px 20px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .hero-title {
+    font-size: 26px;
+    font-weight: 900;
+    color: #FFE8CC;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 1;
+  }
+  .hero-subtitle {
+    font-size: 13px;
+    color: rgba(255,232,204,0.75);
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 1px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,232,204,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: #FFE8CC;
+    margin-top: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* INTRO */
+  .intro-card {
+    margin: 16px 14px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 2px 10px rgba(139,26,26,0.08);
+    font-size: 13.5px;
+    color: var(--text-light);
+    line-height: 1.8;
+  }
+  .intro-card strong { color: var(--primary); }
+
+  /* PROGRESS */
+  .progress-bar-wrap { padding: 4px 14px 0; }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+  .progress-bar {
+    height: 5px;
+    background: #F0E0D0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 3px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 14px 10px;
+    gap: 10px;
+  }
+  .section-dot {
+    width: 5px; height: 24px;
+    border-radius: 3px;
+    background: var(--primary);
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .section-sub { font-size: 12px; color: var(--text-light); margin-left: auto; }
+
+  /* QUESTIONS */
+  .questions-wrap { padding: 0 14px; }
+  .question-item {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .question-item.checked {
+    border-color: var(--primary-light);
+    box-shadow: 0 2px 8px rgba(192,57,43,0.15);
+    background: #FFF8F7;
+  }
+  .question-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-number {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: #F0E8DF;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .question-item.checked .q-number {
+    background: var(--primary-light);
+    color: white;
+  }
+  .q-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .q-check {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid #D0BEB0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .question-item.checked .q-check {
+    background: var(--primary-light);
+    border-color: var(--primary-light);
+  }
+  .question-item.checked .q-check::after {
+    content: '';
+    display: block;
+    width: 5px; height: 9px;
+    border: 2px solid white;
+    border-top: none; border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  input[type="checkbox"].hidden-cb { display: none; }
+
+  /* SUBMIT */
+  .submit-area {
+    padding: 16px 14px 24px;
+    text-align: center;
+  }
+  .btn-submit {
+    display: inline-block;
+    padding: 14px 48px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(139,26,26,0.35);
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+  .btn-submit:active { transform: scale(0.97); }
+
+  /* RESULT */
+  #result-section { display: none; }
+
+  .result-hero {
+    background: linear-gradient(145deg, #6B1A1A 0%, #8B2828 100%);
+    padding: 24px 20px;
+    text-align: center;
+    color: white;
+  }
+  .result-hero h2 { font-size: 20px; font-weight: 800; letter-spacing: 2px; margin-bottom: 6px; }
+  .result-hero p { font-size: 13px; opacity: 0.8; }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 16px 14px;
+  }
+  .score-cell {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 12px 4px;
+    text-align: center;
+    border: 2px solid var(--border);
+  }
+  .score-cell.alert { border-color: var(--primary-light); background: #FFF3F2; }
+  .score-cell.good  { border-color: #4CAF50; background: #F1F8F1; }
+  .score-organ { font-size: 11px; font-weight: 700; color: var(--text-light); margin-bottom: 3px; }
+  .score-num { font-size: 22px; font-weight: 900; }
+  .score-cell.alert .score-num { color: var(--primary-light); }
+  .score-cell.good  .score-num { color: #4CAF50; }
+  .score-max { font-size: 11px; color: #aaa; }
+  .score-tag {
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 8px;
+    margin-top: 5px;
+    display: inline-block;
+    font-weight: 600;
+  }
+  .score-cell.alert .score-tag { background: #FDECEA; color: var(--primary-light); }
+  .score-cell.good  .score-tag { background: #E8F5E9; color: #2E7D32; }
+  .score-cell:not(.alert):not(.good) .score-num { color: #D97706; }
+  .score-cell:not(.alert):not(.good) .score-tag { background: #FFF8E7; color: #92400E; }
+
+  /* ADVICE CARDS */
+  .advice-wrap { padding: 0 14px; }
+  .advice-card {
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .advice-card-header {
+    padding: 16px 18px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .advice-card-header.liver  { background: linear-gradient(135deg, #2E7D32, #43A047); }
+  .advice-card-header.heart  { background: linear-gradient(135deg, #B71C1C, #D32F2F); }
+  .advice-card-header.spleen { background: linear-gradient(135deg, #E65100, #F57C00); }
+  .advice-card-header.lung   { background: linear-gradient(135deg, #01579B, #0277BD); }
+  .advice-card-header.kidney { background: linear-gradient(135deg, #1A237E, #1565C0); }
+  .advice-card-emoji { font-size: 28px; }
+  .advice-card-title { font-size: 20px; font-weight: 900; letter-spacing: 2px; }
+  .advice-card-sub   { font-size: 12px; opacity: 0.85; }
+  .advice-priority {
+    margin-left: auto;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+  .advice-body { background: var(--card-bg); padding: 16px 18px; }
+  .advice-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0E8DF;
+  }
+  .advice-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .advice-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .advice-label { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 3px; letter-spacing: 1px; }
+  .advice-text  { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+  .external-block {
+    background: #FFF8E7;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    border: 1.5px solid #F0C040;
+  }
+  .ext-title { font-size: 13px; font-weight: 700; color: #8B6914; margin-bottom: 8px; }
+  .internal-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .pill {
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #7A5800;
+    font-weight: 600;
+  }
+  .ext-moxibustion {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.7;
+    padding-top: 8px;
+    border-top: 1px dashed #E8D070;
+  }
+  .ext-moxibustion strong { color: var(--primary); }
+
+  /* ACUPOINT */
+  .acupoint-section { padding: 0 14px 20px; }
+  .body-diagram { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+  .body-side {
+    flex: 1; max-width: 160px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    padding: 12px 10px 14px;
+  }
+  .body-side-label {
+    text-align: center;
+    font-size: 11px; font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  .body-svg { width: 100%; display: block; }
+  .acupoint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .acupoint-item {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .acupoint-item.highlighted { border-color: var(--primary-light); background: #FFF5F4; }
+  .acu-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .acu-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .acu-location { font-size: 11px; color: var(--text-light); margin-top: 2px; line-height: 1.4; }
+
+  /* RESET */
+  .reset-area { text-align: center; padding: 16px 14px 10px; }
+  .btn-outline {
+    padding: 12px 32px;
+    border-radius: 24px;
+    border: 1.5px solid var(--border);
+    font-size: 15px; font-weight: 600;
+    background: white;
+    color: var(--text-light);
+    cursor: pointer;
+  }
+  .btn-outline:active { transform: scale(0.97); }
+
+  /* FOOTER */
+  .footer {
+    background: #F5EDE0;
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #9E7B62;
+    line-height: 1.8;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-size: 18px; font-weight: 900; color: var(--primary); margin-bottom: 4px; letter-spacing: 2px; }
+
+  /* SCROLL TOP */
+  .scroll-top {
+    position: fixed; bottom: 24px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: none; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    cursor: pointer; z-index: 100;
+  }
+  .scroll-top.show { display: flex; }
+
+  @keyframes pulse-dot {
+    0%,100% { transform: scale(1); opacity:1; }
+    50%      { transform: scale(1.35); opacity:0.65; }
+  }
+  .pulse { animation: pulse-dot 1.5s infinite; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">🌿 五脏健康自测</div>
+  <div class="hero-subtitle">中医整体观 · 全维度养护方案</div>
+  <div class="hero-badge">25题 · 专业评估 · 个性化调理</div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-card">
+  <strong>📋 测评说明：</strong>以下共 25 道题，请根据自身近期情况判断，<strong>符合打✓，不符合留空</strong>。完成后点击「查看结果」，系统将自动评估并给出个性化养护建议。
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-info">
+    <span>答题进度</span>
+    <span id="progress-text">0 / 25</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<!-- SECTION HEADER -->
+<div class="section-header">
+  <div class="section-dot"></div>
+  <div class="section-title">健康自测题</div>
+  <div class="section-sub">符合打✓</div>
+</div>
+
+<!-- QUESTIONS (shuffled, no organ label) -->
+<div class="questions-wrap" id="questions-wrap">
+  <!-- rendered by JS -->
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-area">
+  <button class="btn-submit" onclick="showResult()">📊 查看测评结果</button>
+</div>
+
+<!-- RESULT -->
+<div id="result-section">
+
+  <div class="result-hero">
+    <h2>🎯 您的测评结果</h2>
+    <p>根据得分为您生成个性化调理方案</p>
+  </div>
+
+  <div class="score-grid" id="score-grid"></div>
+
+  <div class="section-header">
+    <div class="section-dot"></div>
+    <div class="section-title">个性化调理方案</div>
+  </div>
+  <div class="advice-wrap" id="advice-wrap"></div>
+
+  <div class="section-header">
+    <div class="section-dot"></div>
+    <div class="section-title">穴区图示</div>
+    <div class="section-sub">外调参考</div>
+  </div>
+
+  <div class="acupoint-section">
+    <div class="body-diagram">
+      <!-- BACK -->
+      <div class="body-side">
+        <div class="body-side-label">背 面</div>
+        <svg class="body-svg" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="22" rx="16" ry="20" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="38" y="40" width="44" height="70" rx="8" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="18" y="44" width="20" height="56" rx="9" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="82" y="44" width="20" height="56" rx="9" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="40" y="108" width="18" height="80" rx="8" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="62" y="108" width="18" height="80" rx="8" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <!-- 大椎 -->
+          <circle id="dot-dazhui" cx="60" cy="46" r="5" fill="#E53935" opacity="0.3"/>
+          <line x1="65" y1="46" x2="90" y2="38" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="37" font-size="8" fill="#B71C1C" font-weight="bold" opacity="0.4">大椎穴区</text>
+          <!-- 肝俞 -->
+          <circle id="dot-ganyu-l" cx="55" cy="66" r="4.5" fill="#2E7D32" opacity="0.3"/>
+          <circle id="dot-ganyu-r" cx="65" cy="66" r="4.5" fill="#2E7D32" opacity="0.3"/>
+          <line x1="69" y1="66" x2="90" y2="58" stroke="#2E7D32" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="57" font-size="8" fill="#1B5E20" font-weight="bold" opacity="0.4">肝俞穴区</text>
+          <!-- 脾俞 -->
+          <circle id="dot-piyu-l" cx="54" cy="78" r="4.5" fill="#F57F17" opacity="0.3"/>
+          <circle id="dot-piyu-r" cx="66" cy="78" r="4.5" fill="#F57F17" opacity="0.3"/>
+          <line x1="69" y1="78" x2="90" y2="72" stroke="#F57F17" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="71" font-size="8" fill="#E65100" font-weight="bold" opacity="0.4">脾俞穴区</text>
+          <!-- 命门 -->
+          <circle id="dot-mingmen" cx="60" cy="91" r="5" fill="#1565C0" opacity="0.3"/>
+          <line x1="65" y1="91" x2="90" y2="86" stroke="#1565C0" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="85" font-size="8" fill="#0D47A1" font-weight="bold" opacity="0.4">命门穴区</text>
+          <!-- 八髎 -->
+          <circle cx="55" cy="104" r="4" fill="#6A1B9A" opacity="0.25"/>
+          <circle cx="65" cy="104" r="4" fill="#6A1B9A" opacity="0.25"/>
+        </svg>
+      </div>
+      <!-- FRONT -->
+      <div class="body-side">
+        <div class="body-side-label">正 面</div>
+        <svg class="body-svg" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="18" rx="14" ry="17" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <circle cx="54" cy="16" r="2.5" fill="#4A3020"/>
+          <circle cx="66" cy="16" r="2.5" fill="#4A3020"/>
+          <rect x="36" y="34" width="48" height="76" rx="8" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="16" y="38" width="20" height="58" rx="9" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="84" y="38" width="20" height="58" rx="9" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="39" y="108" width="18" height="82" rx="8" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <rect x="63" y="108" width="18" height="82" rx="8" fill="#F5E6D3" stroke="#C8A882" stroke-width="1.5"/>
+          <!-- 膻中 -->
+          <circle id="dot-danzhong" cx="60" cy="58" r="5" fill="#C0392B" opacity="0.3"/>
+          <line x1="65" y1="58" x2="88" y2="52" stroke="#C0392B" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="51" font-size="8" fill="#922B21" font-weight="bold" opacity="0.4">膻中穴区</text>
+          <!-- 中脘 -->
+          <circle id="dot-zhongwan" cx="60" cy="74" r="5" fill="#D97706" opacity="0.3"/>
+          <line x1="65" y1="74" x2="88" y2="68" stroke="#D97706" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="67" font-size="8" fill="#92400E" font-weight="bold" opacity="0.4">中脘穴区</text>
+          <!-- 神阙 -->
+          <circle id="dot-shenque" cx="60" cy="89" r="5" fill="#F57F17" opacity="0.3"/>
+          <line x1="65" y1="89" x2="88" y2="83" stroke="#F57F17" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="82" font-size="8" fill="#E65100" font-weight="bold" opacity="0.4">神阙穴区</text>
+          <!-- 关元 -->
+          <circle id="dot-guanyuan" cx="60" cy="104" r="5" fill="#1565C0" opacity="0.3"/>
+          <line x1="65" y1="104" x2="88" y2="98" stroke="#1565C0" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+          <text x="72" y="97" font-size="8" fill="#0D47A1" font-weight="bold" opacity="0.4">关元穴区</text>
+        </svg>
+      </div>
+    </div>
+    <div class="acupoint-grid" id="acupoint-grid"></div>
+  </div>
+
+  <div class="reset-area">
+    <button class="btn-outline" onclick="resetAll()">🔄 重新测评</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">🌿 五脏养护</div>
+  <div>本测评结果仅供参考，不构成医学诊断建议</div>
+  <div>如有不适，请及时就医咨询专业医师</div>
+</div>
+
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// 25题数据，organ字段仅用于后台计分，不对外显示
+const ALL_QUESTIONS = [
+  { id:'liver-1',  organ:'liver',  text:'经常感到烦躁、易怒，或情绪低落、容易emo，难以控制情绪' },
+  { id:'liver-2',  organ:'liver',  text:'眼睛干涩、模糊，或有黑眼圈、眼疲劳，迎风易流泪' },
+  { id:'liver-3',  organ:'liver',  text:'经常头晕、头痛，尤其是两侧太阳穴部位，或有肢体麻木感' },
+  { id:'liver-4',  organ:'liver',  text:'指甲易开裂、有竖纹，或颜色发暗、无光泽' },
+  { id:'liver-5',  organ:'liver',  text:'熬夜后容易口苦、口臭，或晨起有明显口干感' },
+  { id:'heart-1',  organ:'heart',  text:'运动后或情绪激动时，容易心慌、心悸、胸闷' },
+  { id:'heart-2',  organ:'heart',  text:'经常失眠、多梦，尤其是夜间易醒，或入睡困难' },
+  { id:'heart-3',  organ:'heart',  text:'面色苍白、无血色，或嘴唇、指甲发紫' },
+  { id:'heart-4',  organ:'heart',  text:'容易疲劳、乏力，稍微活动就觉得气短、没精神' },
+  { id:'heart-5',  organ:'heart',  text:'偶尔有胸闷、胸痛，休息后可缓解' },
+  { id:'spleen-1', organ:'spleen', text:'饭后容易腹胀、嗳气，或有消化不良、食欲不振的情况' },
+  { id:'spleen-2', organ:'spleen', text:'大便稀溏、不成形，或黏腻不畅，容易粘在马桶上' },
+  { id:'spleen-3', organ:'spleen', text:'身体沉重、乏力，总觉得没力气，懒得动' },
+  { id:'spleen-4', organ:'spleen', text:'面色发黄、暗沉，或有眼袋、面部浮肿' },
+  { id:'spleen-5', organ:'spleen', text:'容易积食、反酸，吃生冷食物后会不舒服' },
+  { id:'lung-1',   organ:'lung',   text:'经常咳嗽、咳痰，尤其是晨起或换季时明显' },
+  { id:'lung-2',   organ:'lung',   text:'容易感冒，免疫力较差，感冒后迟迟不好' },
+  { id:'lung-3',   organ:'lung',   text:'胸闷、气短，稍微活动就会咳嗽、喘促' },
+  { id:'lung-4',   organ:'lung',   text:'皮肤干燥、粗糙，容易起皮、瘙痒' },
+  { id:'lung-5',   organ:'lung',   text:'鼻子干燥、易出血，或经常鼻塞、打喷嚏' },
+  { id:'kidney-1', organ:'kidney', text:'经常腰膝酸软、无力，久坐或久站后加重' },
+  { id:'kidney-2', organ:'kidney', text:'夜间起夜次数 ≥ 2次，或有尿频、尿急的情况' },
+  { id:'kidney-3', organ:'kidney', text:'头发干枯、脱落严重，或发白速度较快' },
+  { id:'kidney-4', organ:'kidney', text:'手脚冰凉、畏寒怕冷，尤其冬季明显，不易回暖' },
+  { id:'kidney-5', organ:'kidney', text:'精神萎靡、健忘，注意力难以集中' },
+];
+
+// Fisher-Yates shuffle (fixed seed via sort trick for reproducibility each load)
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const SHUFFLED = shuffle(ALL_QUESTIONS);
+
+const ORGAN_META = {
+  liver:  { name:'肝', emoji:'🌿', cls:'liver',  label:'清肝明目' },
+  heart:  { name:'心', emoji:'❤️', cls:'heart',  label:'养心安神' },
+  spleen: { name:'脾', emoji:'🍯', cls:'spleen', label:'健脾祛湿' },
+  lung:   { name:'肺', emoji:'🌬️', cls:'lung',   label:'清肺止咳' },
+  kidney: { name:'肾', emoji:'💧', cls:'kidney', label:'强肾驱寒' },
+};
+
+const ADVICE = {
+  liver: {
+    eat:   '忌寒凉，少酸，多吃绿色食物，如海带、绿豆、西蓝花',
+    sleep: '尽量不熬夜，睡前泡脚，祛寒助眠。睡前体质能量贴贴于肝俞穴区',
+    move:  '跑步、爬山、刮太冲',
+    fun:   '平和心态，多听舒缓音乐，不急不躁',
+    inner: ['乌梅佛手发酵饮品2.0','甘态舒压片糖果','黑醋栗叶黄素酯固体饮料','破壁灵芝孢子粉'],
+    outer: '灸肝俞穴区、中脘穴区',
+    acupoints: ['肝俞穴区','中脘穴区'],
+  },
+  heart: {
+    eat:   '忌寒凉，适当苦味，多吃红色食物，如红豆、红枣、红糖',
+    sleep: '尽量不熬夜，睡前泡脚，祛寒助眠。睡前体质能量贴贴于关元穴区',
+    move:  '击掌、太极',
+    fun:   '保持积极乐观的心态，多听欢快音乐，不要大喜大悲，精神内守',
+    inner: ['心脑血管五剑客','安欣益晚发酵饮品','玫瑰枸杞发酵饮品'],
+    outer: '灸大椎穴区、膻中穴区',
+    acupoints: ['大椎穴区','膻中穴区','关元穴区'],
+  },
+  spleen: {
+    eat:   '忌寒凉，少甜食，多吃黄色食物，如小米、南瓜、红薯',
+    sleep: '尽量不熬夜，睡前泡脚，祛寒助眠。睡前体质能量贴贴于神阙穴区',
+    move:  '揉腹、敲足三里',
+    fun:   '保持积极乐观的心态，多听欢快音乐，减少一人独处，不要思虑太重',
+    inner: ['七天素养合套组','红豆薏米发酵饮品','麦香味固体饮料','益生菌特膳粉'],
+    outer: '灸脾俞穴区、中脘穴区、神阙穴区',
+    acupoints: ['脾俞穴区','中脘穴区','神阙穴区'],
+  },
+  lung: {
+    eat:   '忌寒凉，少辛辣，多吃白色食物，如银耳莲子、冰糖雪梨',
+    sleep: '尽量不熬夜，睡前泡脚，祛寒助眠。睡前将体质能量贴贴于大椎穴区',
+    move:  '快步走，拍肺经',
+    fun:   '保持积极乐观的心态，多听欢快音乐，尽量避免长时间独处，不要思虑太重',
+    inner: ['非无忧发酵饮品','昱咽颗粒','人参乳清蛋白特膳粉','活醣2.0'],
+    outer: '灸大椎穴区、膻中穴区',
+    acupoints: ['大椎穴区','膻中穴区'],
+  },
+  kidney: {
+    eat:   '忌寒凉，少咸味，多吃黑色食物，如黑豆、黑米、黑芝麻',
+    sleep: '尽量不熬夜，睡前泡脚，祛寒助眠。睡前将体质能量贴贴于关元穴区',
+    move:  '搓腰眼、搓耳垂、太极、站桩',
+    fun:   '不要畏惧害怕，多听欢快音乐，积极面对生活',
+    inner: ['牡蛎肽压片糖果','前力舒凝胶糖果','鹿血肽肉苁蓉发酵双舱饮','丹桂花玫瑰发酵双舱饮','神经酸复合肽饮品','蕴膳坊多种矿物质胶囊'],
+    outer: '灸命门穴区、关元穴区',
+    acupoints: ['命门穴区','关元穴区'],
+  },
+};
+
+const ACU_INFO = {
+  '大椎穴区': { pos:'颈后正中，第七颈椎棘突下凹陷处', color:'#E53935' },
+  '肝俞穴区': { pos:'背部第九胸椎棘突下，旁开1.5寸', color:'#2E7D32' },
+  '脾俞穴区': { pos:'背部第十一胸椎棘突下，旁开1.5寸', color:'#F57F17' },
+  '命门穴区': { pos:'腰部后正中线，第二腰椎棘突下凹陷', color:'#1565C0' },
+  '膻中穴区': { pos:'胸部前正中线，两乳头连线中点处', color:'#C0392B' },
+  '中脘穴区': { pos:'上腹部前正中线，脐上4寸处', color:'#D97706' },
+  '神阙穴区': { pos:'腹部正中央，即肚脐处', color:'#F57F17' },
+  '关元穴区': { pos:'下腹部前正中线，脐下3寸处', color:'#1565C0' },
+};
+
+const dotMap = {
+  '大椎穴区': ['dot-dazhui'],
+  '肝俞穴区': ['dot-ganyu-l','dot-ganyu-r'],
+  '脾俞穴区': ['dot-piyu-l','dot-piyu-r'],
+  '命门穴区': ['dot-mingmen'],
+  '膻中穴区': ['dot-danzhong'],
+  '中脘穴区': ['dot-zhongwan'],
+  '神阙穴区': ['dot-shenque'],
+  '关元穴区': ['dot-guanyuan'],
+};
+
+// Render questions
+function renderQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = '';
+  SHUFFLED.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'question-item';
+    div.id = 'qi-' + q.id;
+    div.innerHTML = `
+      <label class="question-label" for="cb-${q.id}">
+        <div class="q-number">${idx + 1}</div>
+        <div class="q-text">${q.text}</div>
+        <div class="q-check"></div>
+      </label>
+      <input type="checkbox" class="hidden-cb" id="cb-${q.id}" data-organ="${q.organ}" onchange="updateQuestion(this)">
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function updateQuestion(cb) {
+  const item = document.getElementById('qi-' + cb.id.replace('cb-',''));
+  item.classList.toggle('checked', cb.checked);
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = SHUFFLED.length;
+  const checked = document.querySelectorAll('input[type=checkbox]:checked').length;
+  document.getElementById('progress-text').textContent = checked + ' / ' + total;
+  document.getElementById('progress-fill').style.width = (checked / total * 100) + '%';
+}
+
+function getScores() {
+  const s = { liver:0, heart:0, spleen:0, lung:0, kidney:0 };
+  document.querySelectorAll('input[type=checkbox]:checked').forEach(cb => {
+    s[cb.dataset.organ]++;
+  });
+  return s;
+}
+
+function showResult() {
+  const scores = getScores();
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+
+  // Score grid
+  const grid = document.getElementById('score-grid');
+  grid.innerHTML = '';
+  sorted.forEach(([organ, score]) => {
+    const meta = ORGAN_META[organ];
+    const isAlert = score >= 3, isGood = score <= 1;
+    const cls = isAlert ? 'alert' : isGood ? 'good' : '';
+    const tag = isAlert ? '需调理' : isGood ? '状态佳' : '关注中';
+    grid.innerHTML += `
+      <div class="score-cell ${cls}">
+        <div class="score-organ">${meta.emoji} ${meta.name}</div>
+        <div class="score-num">${score}</div>
+        <div class="score-max">/ 5</div>
+        <div class="score-tag">${tag}</div>
+      </div>`;
+  });
+
+  // Advice
+  const wrap = document.getElementById('advice-wrap');
+  wrap.innerHTML = '';
+  const alertOrgans = sorted.filter(([,s]) => s >= 3);
+  const showOrgans = alertOrgans.length > 0 ? alertOrgans : sorted.slice(0,1);
+  const rankLabel = ['首要调理','次要调理','辅助调理'];
+
+  showOrgans.forEach(([organ, score], idx) => {
+    const meta = ORGAN_META[organ];
+    const adv = ADVICE[organ];
+    wrap.innerHTML += `
+      <div class="advice-card">
+        <div class="advice-card-header ${meta.cls}">
+          <span class="advice-card-emoji">${meta.emoji}</span>
+          <div>
+            <div class="advice-card-title">${meta.label}</div>
+            <div class="advice-card-sub">得分 ${score}/5</div>
+          </div>
+          <div class="advice-priority">${rankLabel[idx]||'辅助调理'}</div>
+        </div>
+        <div class="advice-body">
+          <div class="advice-row">
+            <div class="advice-icon" style="background:#FEF3E2;">🍽️</div>
+            <div><div class="advice-label">【吃】</div><div class="advice-text">${adv.eat}</div></div>
+          </div>
+          <div class="advice-row">
+            <div class="advice-icon" style="background:#E8F5E9;">😴</div>
+            <div><div class="advice-label">【睡】</div><div class="advice-text">${adv.sleep}</div></div>
+          </div>
+          <div class="advice-row">
+            <div class="advice-icon" style="background:#E3F2FD;">🏃</div>
+            <div><div class="advice-label">【动】</div><div class="advice-text">${adv.move}</div></div>
+          </div>
+          <div class="advice-row">
+            <div class="advice-icon" style="background:#F3E5F5;">🎵</div>
+            <div><div class="advice-label">【乐】</div><div class="advice-text">${adv.fun}</div></div>
+          </div>
+          <div class="external-block">
+            <div class="ext-title">🌿 【调】全方位调养</div>
+            <div style="font-size:12px;color:#8B6914;margin-bottom:8px;font-weight:600;">内调推荐：</div>
+            <div class="internal-pills">${adv.inner.map(p=>`<span class="pill">${p}</span>`).join('')}</div>
+            <div class="ext-moxibustion"><strong>外调：</strong>${adv.outer}每天1次，10天一疗程，1个月一个周期</div>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  // Acupoints
+  const acuGrid = document.getElementById('acupoint-grid');
+  acuGrid.innerHTML = '';
+  const allAcupoints = new Set();
+  showOrgans.forEach(([organ]) => ADVICE[organ].acupoints.forEach(a => allAcupoints.add(a)));
+
+  // dim all dots first
+  document.querySelectorAll('circle[id^="dot-"]').forEach(c => {
+    c.setAttribute('opacity','0.25');
+    c.classList.remove('pulse');
+  });
+
+  allAcupoints.forEach(acu => {
+    (dotMap[acu]||[]).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.setAttribute('opacity','1'); el.classList.add('pulse'); }
+    });
+    const info = ACU_INFO[acu];
+    if (!info) return;
+    acuGrid.innerHTML += `
+      <div class="acupoint-item highlighted">
+        <div class="acu-dot" style="background:${info.color};margin-top:4px;"></div>
+        <div>
+          <div class="acu-name">${acu}</div>
+          <div class="acu-location">${info.pos}</div>
+        </div>
+      </div>`;
+  });
+
+  // show / hide
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({ behavior:'smooth' });
+}
+
+function resetAll() {
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; });
+  document.querySelectorAll('.question-item').forEach(el => el.classList.remove('checked'));
+  updateProgress();
+  document.getElementById('result-section').style.display = 'none';
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  btn.classList.toggle('show', window.scrollY > 300);
+});
+
+// init
+renderQuestions();
+updateProgress();
+</script>
+</body>
+</html>
