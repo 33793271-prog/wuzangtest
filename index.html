@@ -338,6 +338,63 @@
   }
   .ext-moxibustion strong { color: var(--primary); }
 
+  /* DOSAGE TABLE */
+  .dosage-block {
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid #E8D5C0;
+  }
+  .dosage-title {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    letter-spacing: 1px;
+  }
+  .dosage-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+  }
+  .dosage-table thead tr {
+    background: #F7EEE6;
+  }
+  .dosage-table th {
+    padding: 6px 4px;
+    color: var(--primary);
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid #E8D5C0;
+    white-space: nowrap;
+  }
+  .dosage-table th:first-child { text-align: left; padding-left: 10px; }
+  .dosage-table td {
+    padding: 7px 4px;
+    text-align: center;
+    color: var(--text);
+    border-bottom: 1px solid #F0E4D8;
+    line-height: 1.4;
+  }
+  .dosage-table td:first-child {
+    text-align: left;
+    padding-left: 10px;
+    font-weight: 600;
+    color: var(--text);
+    max-width: 100px;
+  }
+  .dosage-table tr:last-child td { border-bottom: none; }
+  .dosage-table tr:nth-child(even) td { background: #FFFAF6; }
+  .dosage-note {
+    font-size: 11px;
+    color: #B8860B;
+    text-align: center;
+    padding: 5px 8px;
+    background: #FFFBF0;
+    border-top: 1px dashed #E8D070;
+  }
+
   /* ACUPOINT */
   .acupoint-section { padding: 0 14px 20px; }
   .body-diagram { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
@@ -615,6 +672,14 @@ const ADVICE = {
     move:  '跑步、爬山、刮太冲',
     fun:   '平和心态，多听舒缓音乐，不急不躁。推荐音乐：《平沙落雁》《渔舟唱晚》《春江花月夜》',
     inner: ['乌梅佛手发酵饮品2.0','甘态舒压片糖果','黑醋栗叶黄素酯固体饮料','破壁灵芝孢子粉'],
+    dosage: [
+      { name:'乌梅佛手发酵饮品2.0', daily:'/', m1:'1盒', m3:'1-3盒', m6:'2-6盒' },
+      { name:'甘态舒压片糖果', daily:'2片', m1:'1瓶', m3:'3瓶', m6:'6瓶' },
+      { name:'黑醋栗叶黄素酯（日常）', daily:'1袋', m1:'1-2盒', m3:'4-5盒', m6:'9-10盒' },
+      { name:'黑醋栗叶黄素酯（加强）', daily:'2袋', m1:'3盒', m3:'9盒', m6:'18盒' },
+      { name:'破壁灵芝孢子粉（日常）', daily:'4片', m1:'1-2瓶', m3:'3-4瓶', m6:'1盒+1-2瓶' },
+      { name:'破壁灵芝孢子粉（加强）', daily:'6片', m1:'1-2瓶', m3:'5-6瓶', m6:'1盒+5瓶' },
+    ],
     outer: '灸肝俞穴区、中脘穴区',
     acupoints: ['肝俞穴区','中脘穴区'],
   },
@@ -624,6 +689,16 @@ const ADVICE = {
     move:  '击掌、太极',
     fun:   '保持积极乐观的心态，不要大喜大悲，精神内守。推荐音乐：《紫竹调》《步步高》《喜洋洋》',
     inner: ['心脑血管五剑客','安欣益晚发酵饮品','玫瑰枸杞发酵饮品'],
+    dosage: [
+      { name:'银杏叶红曲片', daily:'2片', m1:'1瓶', m3:'1-2瓶', m6:'2-3瓶' },
+      { name:'纳豆压片糖果', daily:'4片', m1:'2瓶', m3:'6瓶（2盒）', m6:'12瓶（4盒）' },
+      { name:'辅酶Q10软胶囊', daily:'1粒', m1:'1瓶', m3:'1-2瓶', m6:'2-3瓶' },
+      { name:'南极磷虾油凝胶糖果', daily:'2粒', m1:'1瓶', m3:'3瓶', m6:'6瓶' },
+      { name:'FDP特膳饮', daily:'1瓶', m1:'1-2盒', m3:'4-5盒', m6:'9-10盒' },
+      { name:'安欣益晚发酵饮品（日常）', daily:'1袋', m1:'1-2盒', m3:'4-5盒', m6:'9-10盒' },
+      { name:'安欣益晚发酵饮品（加强）', daily:'2袋', m1:'3盒', m3:'9盒', m6:'18盒' },
+      { name:'玫瑰枸杞发酵饮品', daily:'1瓶', m1:'3盒', m3:'9盒', m6:'18盒' },
+    ],
     outer: '灸大椎穴区、膻中穴区',
     acupoints: ['大椎穴区','膻中穴区','关元穴区'],
   },
@@ -633,6 +708,13 @@ const ADVICE = {
     move:  '揉腹、敲足三里',
     fun:   '保持积极乐观的心态，减少一人独处，不要思虑太重。推荐音乐：《十面埋伏》《阳春白雪》《高山流水》',
     inner: ['七天素养合套组','红豆薏米发酵饮品','麦香味固体饮料','益生菌特膳粉'],
+    dosage: [
+      { name:'七天素养合套组（日常）', daily:'2片+1袋', m1:'1套', m3:'3套', m6:'6套' },
+      { name:'七天素养合套组（加强）', daily:'4片+2袋', m1:'2套', m3:'6套', m6:'12套' },
+      { name:'红豆薏米发酵饮品', daily:'2瓶', m1:'6盒', m3:'18盒', m6:'36盒' },
+      { name:'麦香味固体饮料', daily:'2袋', m1:'3盒', m3:'9盒', m6:'18盒' },
+      { name:'益生菌特膳粉', daily:'1袋', m1:'1-2盒', m3:'4-5盒', m6:'9-10盒' },
+    ],
     outer: '灸脾俞穴区、中脘穴区、神阙穴区',
     acupoints: ['脾俞穴区','中脘穴区','神阙穴区'],
   },
@@ -642,6 +724,13 @@ const ADVICE = {
     move:  '快步走，拍肺经',
     fun:   '保持积极乐观的心态，尽量避免长时间独处，不要思虑太重。推荐音乐：《阳春白雪》《高山流水》《梅花三弄》',
     inner: ['非无忧发酵饮品','昱咽颗粒','人参乳清蛋白特膳粉','活醣2.0'],
+    dosage: [
+      { name:'非无忧发酵饮品（日常）', daily:'1袋', m1:'3盒', m3:'9盒', m6:'18盒' },
+      { name:'非无忧发酵饮品（加强）', daily:'2袋', m1:'6盒', m3:'18盒', m6:'36盒' },
+      { name:'昱咽颗粒', daily:'1-2袋', m1:'2-3盒', m3:'5-9盒', m6:'9-18盒' },
+      { name:'人参乳清蛋白特膳粉', daily:'1袋', m1:'1.5盒', m3:'4.5盒', m6:'9盒' },
+      { name:'活醣2.0', daily:'2瓶', m1:'6盒', m3:'18盒', m6:'36盒' },
+    ],
     outer: '灸大椎穴区、膻中穴区',
     acupoints: ['大椎穴区','膻中穴区'],
   },
@@ -651,6 +740,14 @@ const ADVICE = {
     move:  '搓腰眼、搓耳垂、太极、站桩',
     fun:   '不要畏惧害怕，积极面对生活。推荐音乐：《梅花三弄》《汉宫秋月》《胡笳十八拍》',
     inner: ['牡蛎肽压片糖果','前力舒凝胶糖果（男性）','鹿血肽肉苁蓉发酵双舱饮（男性）','丹桂花玫瑰发酵双舱饮（女性）','神经酸复合肽饮品','蕴膳坊多种矿物质胶囊'],
+    dosage: [
+      { name:'牡蛎肽压片糖果', daily:'2片', m1:'1瓶', m3:'3瓶', m6:'6瓶' },
+      { name:'前力舒凝胶糖果（男性）', daily:'2片', m1:'1瓶', m3:'3瓶', m6:'6瓶' },
+      { name:'鹿血肽肉苁蓉发酵双舱饮（男）', daily:'2片+1瓶', m1:'3盒', m3:'9盒', m6:'18盒' },
+      { name:'丹桂花玫瑰发酵双舱饮（女）', daily:'2片+1瓶', m1:'2盒', m3:'6盒', m6:'13盒' },
+      { name:'神经酸复合肽饮品', daily:'1瓶', m1:'2-3盒', m3:'4-5盒', m6:'9-10盒' },
+      { name:'蕴膳坊多种矿物质胶囊', daily:'4片', m1:'1-2瓶', m3:'3-4瓶', m6:'7瓶' },
+    ],
     outer: '灸命门穴区、关元穴区',
     acupoints: ['命门穴区','关元穴区'],
   },
@@ -786,6 +883,14 @@ function showResult() {
             <div class="ext-title">🌿 【调】全方位调养</div>
             <div style="font-size:12px;color:#8B6914;margin-bottom:8px;font-weight:600;">内调推荐：</div>
             <div class="internal-pills">${adv.inner.map(p=>`<span class="pill">${p}</span>`).join('')}</div>
+            <div class="dosage-block">
+              <div class="dosage-title">📊 建议使用量</div>
+              <table class="dosage-table">
+                <thead><tr><th>产品名称</th><th>每日用量</th><th>1个月</th><th>3个月</th><th>6个月</th></tr></thead>
+                <tbody>${adv.dosage.map(d=>`<tr><td>${d.name}</td><td>${d.daily}</td><td>${d.m1}</td><td>${d.m3}</td><td>${d.m6}</td></tr>`).join('')}</tbody>
+              </table>
+              <div class="dosage-note">⚠️ 实际用量根据个人情况而定</div>
+            </div>
             <div class="ext-moxibustion"><strong>外调：</strong>${adv.outer}每天1次，10天一疗程，1个月一个周期</div>
           </div>
         </div>
